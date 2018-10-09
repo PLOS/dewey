@@ -21,7 +21,6 @@ SETTINGS_MODULE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODULE_ROOT = os.path.dirname(SETTINGS_MODULE)
 PROJECT_ROOT = os.path.dirname(MODULE_ROOT)
 
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = get_env('DEWEY_SECRET_KEY')
 
@@ -29,7 +28,6 @@ SECRET_KEY = get_env('DEWEY_SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = ['dewey.sfo.plos.org', 'dewey.soma.plos.org']
-
 
 # Application definition
 
@@ -86,7 +84,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dewey.core.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
@@ -94,13 +91,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'dewey',
-        'USER' : get_env('DEWEY_POSTGRES_USER'),
-        'PASSWORD' : get_env('DEWEY_POSTGRES_PASSWORD'),
-        'HOST' : get_env('DEWEY_POSTGRES_HOST'),
-        'PORT' : get_env('DEWEY_POSTGRES_PORT')
+        'USER': get_env('DEWEY_POSTGRES_USER'),
+        'PASSWORD': get_env('DEWEY_POSTGRES_PASSWORD'),
+        'HOST': get_env('DEWEY_POSTGRES_HOST'),
+        'PORT': get_env('DEWEY_POSTGRES_PORT')
     },
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -114,7 +110,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -145,37 +140,48 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-      'verbose': {
-          'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-          'datefmt' : "%d/%b/%Y %H:%M:%S"
-      },
-      'simple': {
-          'format': '%(levelname)s %(message)s'
-      },
+        'verbose': {
+            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt': "%d/%b/%Y %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
     },
     'handlers': {
-      'file': {
-          'level': 'DEBUG',
-          'class': 'logging.handlers.RotatingFileHandler',
-          'filename': os.path.join(LOG_DIR, 'dewey.log'),
-          'maxBytes' : 1024 * 1024 * 5,  # 5MiB
-          'backupCount' : 5,
-          'formatter': 'verbose'
-      },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'dewey.log'),
+            'maxBytes': 1024 * 1024 * 5,  # 5MiB
+            'backupCount': 5,
+            'formatter': 'verbose'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+            'stream': sys.stdout
+        },
+        'gunicorn': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        }
     },
     'loggers': {
-      'django': {
-          'handlers':['file'],
-          'propagate': True,
-          'level': 'DEBUG',
-      },
-      'dewey' : {
-          'handlers': ['file'],
-          'level': 'DEBUG',
-      },
+        'django': {
+            'handlers': ['file', 'gunicorn'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+        'dewey': {
+            'handlers': ['file', 'gunicorn'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     }
 }
-
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -186,17 +192,15 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 25,
 }
 
-
 # Jira integration for syncing assets
 
 JIRA_USERNAME = get_env('DEWEY_JIRA_USER')
 JIRA_PASSWORD = get_env('DEWEY_JIRA_PASSWORD')
 JIRA_URL = 'https://developer.plos.org/jira'
 
-
 # Celery Task queue
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = os.getenv('DEWEY_CELERY_BROKER_URL', 'redis://localhost:6379/0')
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_RESULT_SERIALIZER = 'pickle'
@@ -207,15 +211,14 @@ SITE_DOMAIN = 'localhost:8000'
 
 # Detect gunicorn
 try:
-  if 'gunicorn' in sys.argv[0]:
-    FRONTEND = 'gunicorn'
-  elif 'runserver' in sys.argv[1]:
-    FRONTEND = 'runserver'
-  else:
-    FRONTEND = None
+    if 'gunicorn' in sys.argv[0]:
+        FRONTEND = 'gunicorn'
+    elif 'runserver' in sys.argv[1]:
+        FRONTEND = 'runserver'
+    else:
+        FRONTEND = None
 except IndexError:
-  FRONTEND = None
-
+    FRONTEND = None
 
 NAGIOS_NETWORKS = ['soma-servers']
 
