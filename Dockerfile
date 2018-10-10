@@ -32,6 +32,7 @@ ENV DEWEY_SECRET_KEY=someSpecialSecret121345 \
 # - Install plop, it needs to be done separately as it is in a private repo and we'll keep a copy
 #   of it in $DEWEY_REPO/tmp/plop on the build machine, and remove it from the container when done
 # - Install deweys requirements.txt
+# - Install dewey
 # - Finally purge the build packages that were required during the install
 RUN apk update && apk upgrade &&\
     apk add git postgresql-libs ncurses-libs bash sassc && \
@@ -39,6 +40,7 @@ RUN apk update && apk upgrade &&\
     python3 -m venv /venvs/dewey && /venvs/dewey/bin/pip install --upgrade pip && \
     /venvs/dewey/bin/pip install git+file:///code/tmp/plop --no-cache-dir && rm -rf /code/tmp && \
     /venvs/dewey/bin/pip install -r requirements/production.txt --no-cache-dir && \
+    /venvs/dewey/bin/python setup.py install && \
     apk --purge del .build-deps
 
 # Add dewey user, and chown dirs to dewey, we'll run the service as dewey.
