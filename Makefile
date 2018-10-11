@@ -1,5 +1,7 @@
 SHELL = /bin/bash
 INSTALL_PATH=/opt/dewey
+VERSION := $(shell cat VERSION)
+GIT_BRANCH := development
 
 install: FINAL_PATH = $(DESTDIR)$(INSTALL_PATH)
 
@@ -23,3 +25,9 @@ install:
 	echo '[ -f /etc/default/dewey ] && . /etc/default/dewey' >> $(FINAL_PATH)/bin/activate
 	sed -i 's/^VIRTUAL_ENV.*$$/VIRTUAL_ENV="\/opt\/dewey"/' $(FINAL_PATH)/bin/activate
 
+.PHONY: docker
+docker:
+	mkdir -p tmp/
+	-git clone git@github.com:PLOS/plop.git tmp/plop
+	pushd tmp/plop && git pull && git checkout $(GIT_BRANCH) && popd
+	docker build -t plos/dewey:$(VERSION) .
