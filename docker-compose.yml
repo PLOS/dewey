@@ -5,19 +5,18 @@ services:
     image: redis:4.0.11-alpine
 
   dewey:
-    image: dewey:v1
+    image: plos/dewey:v0.0.20.2
     ports:
       - "8080:8080"
     environment:
       DEWEY_SECRET_KEY: "someReallyl0g5tr1ng"
       DEWEY_POSTGRES_HOST: "172.28.128.3"
       DEWEY_POSTGRES_PASSWORD: "Aiy5vah0cheep"
-      STATIC_ROOT: "/tmp/django"
     depends_on:
       - redis
 
   dewey-celery-worker:
-    image: dewey:v1
+    image: plos/dewey:v0.0.20.2
     entrypoint: /code/bin/dewey-celery.sh
     command: worker
     environment:
@@ -28,7 +27,7 @@ services:
       - redis
 
   dewey-celery-scheduler:
-    image: dewey:v1
+    image: plos/dewey:v0.0.20.2
     entrypoint: /code/bin/dewey-celery.sh
     command: beat
     environment:
@@ -39,7 +38,7 @@ services:
       - redis
 
   dewey-celery-flower:
-    image: dewey:v1
+    image: plos/dewey:v0.0.20.2
     entrypoint: /code/bin/dewey-celery.sh
     command: flower
     environment:

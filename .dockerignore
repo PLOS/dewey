@@ -1,0 +1,7 @@
+.git/
+.idea/
+venv/
+debian/
+lib/.git/
+docker-compose.yml
+Dockerfile
