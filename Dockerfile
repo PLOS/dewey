@@ -51,7 +51,7 @@ ENV DEWEY_SECRET_KEY=someSpecialSecret121345 \
     PDNS_API_KEY=PDNSApiKey \
     DEWEY_VAULT_PASSWORD=DeweyVaultPasswd \
     DEWEY_CELERY_BROKER_URL="redis://redis:6379/0" \
-    DJANGO_SETTINGS_MODULE="dewey.core.settings.plosdev"
+    DJANGO_SETTINGS_MODULE="dewey.core.settings.docker-dev"
 
 # Set a pre-defined env var so the startup scripts can locate our virtualenv
 ENV VIRTUALENV=/venvs/dewey

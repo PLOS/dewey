@@ -1,7 +1,7 @@
 SHELL = /bin/bash
-INSTALL_PATH=/opt/dewey
-VERSION := $(shell cat VERSION)
-PLOP_BRANCH := development
+INSTALL_PATH = /opt/dewey
+VERSION ?= $(shell cat VERSION)
+PLOP_BRANCH ?= development
 
 install: FINAL_PATH = $(DESTDIR)$(INSTALL_PATH)
 
@@ -29,5 +29,5 @@ install:
 docker:
 	mkdir -p tmp/
 	-git clone git@github.com:PLOS/plop.git tmp/plop
-	pushd tmp/plop && git pull && git checkout $(GIT_BRANCH) && popd
+	pushd tmp/plop && git pull && git checkout $(PLOP_BRANCH) && popd
 	docker build -t plos/dewey:v$(VERSION) .
