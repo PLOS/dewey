@@ -9,6 +9,5 @@ DEBUG = True
 
 SITE_PROTOCOL = 'http'
 SITE_DOMAIN = 'dewey.sfo.plos.org'
-ALLOWED_HOSTS.append('localhost')
 
 TASKS_ENABLED = False
