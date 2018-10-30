@@ -38,6 +38,7 @@ USER dewey:dewey
 # Copy over the virtual env and the code from the builder
 COPY --from=builder --chown=dewey:dewey /venvs /venvs
 COPY --from=builder --chown=dewey:dewey /code /code
+WORKDIR /code
 
 # Set some defaults for Deweys expected env vars.
 ENV DEWEY_SECRET_KEY=someSpecialSecret121345 \
