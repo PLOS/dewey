@@ -56,6 +56,7 @@ ENV DEWEY_SECRET_KEY=someSpecialSecret121345 \
 
 # Set a pre-defined env var so the startup scripts can locate our virtualenv
 ENV VIRTUALENV=/venvs/dewey
+RUN . /venvs/dewey/bin/activate && dewey-manager collectstatic --no-input
 
 # Start dewey via our startup script.
 ENTRYPOINT ["/code/bin/dewey-gunicorn-docker.sh"]
