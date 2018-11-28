@@ -32,6 +32,8 @@ echo "Starting $NAME as `whoami`"
 # the activate script should be modified to source /etc/default/dewey for us
 . $VIRTUALENV/bin/activate
 
+dewey-manager migrate
+
 # Start your Django Unicorn
 # Programs meant to be run under supervisor should not daemonize themselves (do not use --daemon)
 exec $VIRTUALENV/bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
