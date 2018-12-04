@@ -40,7 +40,8 @@ COPY --from=builder --chown=dewey:dewey /venvs /venvs
 COPY --from=builder --chown=dewey:dewey /code /code
 WORKDIR /code
 
-# Set some defaults for Deweys expected env vars.
+# Set some defaults for Deweys expected env vars. These can be overridden during launch or in the
+# docker-compose files.
 ENV DEWEY_SECRET_KEY=someSpecialSecret121345 \
     DEWEY_POSTGRES_HOST=localhost \
     DEWEY_POSTGRES_PORT=5432 \

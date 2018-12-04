@@ -64,4 +64,14 @@ export JIRA_USERNAME='joesixpack'
 export JIRA_PASSWORD='drinkspbr'
 ```
 
+## Running dewey in Docker
+
+You may have noticed the [Dockerfile](./Dockerfile) in the repo, and want to run
+this with Docker. You will find the docker-compose file and instructions in the
+[dewey-formula repo](https://github.com/PLOS-Formulas/dewey-formula/).
+
+The compose file will start all of the needed dependencies and dewey, though
+you will still need to manually create a superuser by following the instructions
+in the formula README.
+
 ## THIS PAGE IS NOT YET DONE
