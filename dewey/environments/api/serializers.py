@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers as serializers
 
 from dewey.environments import OperatingSystem
-from .models import Cluster, Host, Environment, Role
+from dewey.environments.models import Cluster, Host, Environment, Role
 
 
 class ClusterSerializer(serializers.ModelSerializer):

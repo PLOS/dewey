@@ -1,23 +1,15 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView
-from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 
-from rest_framework_nested import routers
-
 from .routers import DeweyRouter
 from .forms import CrispyAuthenticationForm
-from dewey.hardware import views as hardware_views
-from dewey.environments import urls as enviro_urls
-from dewey.environments.views import rest as enviro_views
-from dewey.environments.views import frontend as enviro_frontend
+from dewey.environments import urls as enviro_urls, views as enviro_frontend
+from dewey.environments.api import views as enviro_views
 from dewey.networks import urls as networks_urls
 from dewey.salt import urls as salt_urls
-
-from dewey.salt.urls import router as salt_router
-
 
 router = DeweyRouter()
 router.trailing_slash = r'/?'

@@ -1,9 +1,8 @@
 from rest_framework_nested import routers
 from django.conf.urls import url
 
-from dewey.environments.views import rest as rest_views
-from dewey.environments.views import frontend as frontend_views
-
+from dewey.environments.api import views as rest_views
+from dewey.environments import views as frontend_views
 
 router = routers.SimpleRouter()
 router.register(r'environments/clusters', rest_views.ClusterViewSet, base_name='environments-clusters')

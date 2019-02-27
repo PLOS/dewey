@@ -3,8 +3,7 @@ from django.conf.urls import url
 from rest_framework_nested import routers
 
 from dewey.salt import api, views
-from dewey.environments.views import rest as enviro_views
-
+from dewey.environments.api import views as enviro_views
 
 router = routers.SimpleRouter()
 router.register(r'salt/changes', api.ChangeViewSet, base_name='salt-changes')

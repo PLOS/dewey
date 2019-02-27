@@ -18,7 +18,7 @@ from dewey.core.utils import dotutils
 from dewey.environments import OperatingSystem
 from dewey.environments.models import Cluster, Environment, Host, Role, SafeAccessControl, Secret
 from dewey.networks.models import Network
-from dewey.environments.serializers import ClusterSerializer, HostSerializer, \
+from dewey.environments.api.serializers import ClusterSerializer, HostSerializer, \
     SaltHostSerializer, SaltHostSecretsSerializer, EnvironmentSerializer, RoleSerializer
 
 
