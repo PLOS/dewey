@@ -2,7 +2,8 @@ from django.conf.urls import url
 
 from rest_framework_nested import routers
 
-from dewey.salt import api, views
+from dewey.salt import views
+from dewey.salt.api import views as api
 from dewey.environments.api import views as enviro_views
 
 router = routers.SimpleRouter()

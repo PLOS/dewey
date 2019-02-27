@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Network, AddressAssignment
+from dewey.networks.models import Network, AddressAssignment
 
 
 class NetworkSerializer(serializers.ModelSerializer):

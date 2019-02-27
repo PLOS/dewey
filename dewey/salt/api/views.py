@@ -2,8 +2,8 @@ from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions, viewsets
 
-from .models import Change, Highstate, StateChange, StateError
-from .serializers import ChangeSerializer, HighstateSerializer, StateChangeSerializer, StateErrorSerializer
+from dewey.salt.models import Change, Highstate, StateChange, StateError
+from dewey.salt.api.serializers import ChangeSerializer, HighstateSerializer, StateChangeSerializer, StateErrorSerializer
 
 
 class SaltApiPermission(permissions.BasePermission):
