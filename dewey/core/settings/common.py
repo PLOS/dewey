@@ -50,6 +50,7 @@ INSTALLED_APPS = (
     'gunicorn',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_swagger',
     'django_celery_results',
     'django_celery_beat',
 )
@@ -66,7 +67,7 @@ MIDDLEWARE_CLASSES = (
     'dewey.core.middleware.login_required.LoginRequiredMiddleware',
 )
 
-ROOT_URLCONF = 'dewey.core.urls'
+ROOT_URLCONF = 'dewey.core.urls.root'
 
 TEMPLATES = [
     {

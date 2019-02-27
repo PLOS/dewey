@@ -9,31 +9,18 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from rest_framework import renderers, metadata, parsers, viewsets
-from rest_framework.pagination import LimitOffsetPagination
+from rest_framework import renderers, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.reverse import reverse as apireverse
 
-from dewey.core.utils import dotutils
+from dewey.core.views import StandardApiMixin
 from dewey.environments import OperatingSystem
+from dewey.core.utils import dotutils
 from dewey.environments.models import Cluster, Environment, Host, Role, SafeAccessControl, Secret
 from dewey.networks.models import Network
 from dewey.environments.api.serializers import ClusterSerializer, HostSerializer, \
     SaltHostSerializer, SaltHostSecretsSerializer, EnvironmentSerializer, RoleSerializer
-
-
-class StandardApiMixin(object):
-    renderer_classes = [
-        renderers.JSONRenderer,
-        renderers.BrowsableAPIRenderer
-    ]
-    parser_classes = [
-        parsers.JSONParser,
-        parsers.FormParser,
-        parsers.MultiPartParser
-    ]
-    metadata_class = metadata.SimpleMetadata
-    pagination_class = LimitOffsetPagination
 
 
 class ClusterViewSet(StandardApiMixin, viewsets.ModelViewSet):
@@ -44,6 +31,8 @@ class ClusterViewSet(StandardApiMixin, viewsets.ModelViewSet):
 class EnvironmentViewSet(StandardApiMixin, viewsets.ModelViewSet):
     queryset = Environment.objects.all()
     serializer_class = EnvironmentSerializer
+    lookup_field = 'name'
+    lookup_value_regex = r'[\w.-]+'
 
 
 class HostViewSet(StandardApiMixin, viewsets.ModelViewSet):
@@ -77,6 +66,17 @@ class SaltHostSecretsViewSet(StandardApiMixin, viewsets.ReadOnlyModelViewSet):
         if host_hostname:
             queryset = Host.objects.filter(hostname=host_hostname)
             return queryset
+
+
+@api_view(['GET', 'HEAD'])
+@renderer_classes([renderers.JSONRenderer, renderers.BrowsableAPIRenderer])
+def api_root(request, fmt=None):
+    return Response({
+        'clusters': apireverse('api_v1:environments:environments-clusters-list', request=request, format=fmt),
+        'environments': apireverse('api_v1:environments:environments-environments-list', request=request, format=fmt),
+        'hosts': apireverse('api_v1:environments:environments-hosts-list', request=request, format=fmt),
+        'roles': apireverse('api_v1:environments:environments-roles-list', request=request, format=fmt)
+    })
 
 
 # TODO rewrite as a class-based view and add to api router

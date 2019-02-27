@@ -28,7 +28,7 @@ class Network(models.Model):
 
     def get_unused_address(self, index=0):
         """
-        Note: this will not work properly on MacOS, where the ping implmentation has no
+        Note: this will not work properly on MacOS, where the ping implementation has no
         '-w' argument.
         TODO: detect platform and/or do something more elegant.
         """

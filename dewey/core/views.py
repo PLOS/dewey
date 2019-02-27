@@ -1,6 +1,9 @@
+import logging
+
 from django.core.exceptions import ImproperlyConfigured
 
-import logging
+from rest_framework import renderers, parsers, metadata
+from rest_framework.pagination import LimitOffsetPagination
 
 logger = logging.getLogger('.'.join(['dewey', __name__]))
 
@@ -80,3 +83,17 @@ class SortMixin(object):
             'order': order,
         })
         return context
+
+
+class StandardApiMixin(object):
+    renderer_classes = [
+        renderers.JSONRenderer,
+        renderers.BrowsableAPIRenderer
+    ]
+    parser_classes = [
+        parsers.JSONParser,
+        parsers.FormParser,
+        parsers.MultiPartParser
+    ]
+    metadata_class = metadata.SimpleMetadata
+    pagination_class = LimitOffsetPagination
