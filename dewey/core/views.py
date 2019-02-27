@@ -2,7 +2,7 @@ import logging
 
 from django.core.exceptions import ImproperlyConfigured
 
-from rest_framework import renderers, parsers, metadata
+from rest_framework import renderers, parsers, metadata, permissions
 from rest_framework.pagination import LimitOffsetPagination
 
 logger = logging.getLogger('.'.join(['dewey', __name__]))
@@ -85,6 +85,15 @@ class SortMixin(object):
         return context
 
 
+class IsAdminOrReadOnly(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_staff:
+            return True
+        if request.user.is_authenticated and request.method in permissions.SAFE_METHODS:
+            return True
+        return False
+
+
 class StandardApiMixin(object):
     renderer_classes = [
         renderers.JSONRenderer,
@@ -97,3 +106,4 @@ class StandardApiMixin(object):
     ]
     metadata_class = metadata.SimpleMetadata
     pagination_class = LimitOffsetPagination
+    permission_classes = (IsAdminOrReadOnly,)

@@ -42,6 +42,16 @@ class HostViewSet(StandardApiMixin, viewsets.ModelViewSet):
     lookup_value_regex = r'[\w\.-]+\.\w+'
 
 
+class HostSecretsViewSet(StandardApiMixin, viewsets.ModelViewSet):
+    serializer_class = SaltHostSecretsSerializer
+
+    def get_queryset(self):
+        host_hostname = self.kwargs.get('host_hostname', None)
+        if host_hostname:
+            queryset = Host.objects.filter(hostname=host_hostname)
+            return queryset
+
+
 class RoleViewSet(StandardApiMixin, viewsets.ModelViewSet):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
@@ -55,11 +65,13 @@ class SaltHostViewSet(StandardApiMixin, viewsets.ReadOnlyModelViewSet):
     lookup_field = 'hostname'
     lookup_value_regex = r'[\w\.-]+\.\w+'
     pagination_class = None
+    permission_classes = []
 
 
 class SaltHostSecretsViewSet(StandardApiMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = SaltHostSecretsSerializer
     pagination_class = None
+    permission_classes = []
 
     def get_queryset(self):
         host_hostname = self.kwargs.get('host_hostname', None)

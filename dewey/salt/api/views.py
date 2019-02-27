@@ -13,7 +13,9 @@ from dewey.core.views import StandardApiMixin
 class SaltApiPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         salt_group = get_object_or_404(Group, name='salt')
-        if request.user.is_authenticated() and request.method in permissions.SAFE_METHODS:
+        if request.user.is_staff:
+            return True
+        if request.user.is_authenticated and request.method in permissions.SAFE_METHODS:
             return True
         return salt_group in request.user.groups.all()
 
@@ -32,7 +34,7 @@ class StateChangeViewSet(StandardApiMixin, viewsets.ModelViewSet):
 
 class StateErrorViewSet(StandardApiMixin, viewsets.ModelViewSet):
     permission_classes = (SaltApiPermission,)
-    serializer_class= StateErrorSerializer
+    serializer_class = StateErrorSerializer
     queryset = StateError.objects.all()
 
 

@@ -10,7 +10,7 @@ router.register(r'environments/hosts', rest_views.HostViewSet, base_name='enviro
 router.register(r'environments/roles', rest_views.RoleViewSet, base_name='environments-roles')
 
 hosts_router = routers.NestedSimpleRouter(router, 'environments/hosts', lookup='host')
-hosts_router.register(r'secrets', rest_views.SaltHostSecretsViewSet, base_name='host-secrets')
+hosts_router.register(r'secrets', rest_views.HostSecretsViewSet, base_name='host-secrets')
 
 urlpatterns = [
     url(r'^environments/$', rest_views.api_root, name='environments-api-root'),

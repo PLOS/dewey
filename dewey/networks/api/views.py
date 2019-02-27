@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, renderers
+from rest_framework.permissions import IsAdminUser
 from rest_framework.reverse import reverse
-from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.response import Response
 
 from dewey.networks.api.serializers import NetworkSerializer, AddressAssignmentSerializer
@@ -23,6 +24,7 @@ class AddressAssignmentViewSet(StandardApiMixin, viewsets.ModelViewSet):
 
 @api_view(['GET'])
 @renderer_classes([renderers.JSONRenderer, renderers.BrowsableAPIRenderer])
+@permission_classes([IsAdminUser])
 def get_unused_address(request, slug):
     network = get_object_or_404(Network, slug=slug)
     return Response({network.slug: network.get_unused_address()})
