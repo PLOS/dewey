@@ -10,6 +10,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from rest_framework import renderers, metadata, parsers, viewsets
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, renderer_classes
 
@@ -17,8 +18,8 @@ from dewey.core.utils import dotutils
 from dewey.environments import OperatingSystem
 from dewey.environments.models import Cluster, Environment, Host, Role, SafeAccessControl, Secret
 from dewey.networks.models import Network
-from dewey.environments.serializers import ClusterSerializer, \
-    SaltHostSerializer, SaltHostSecretsSerializer
+from dewey.environments.serializers import ClusterSerializer, HostSerializer, \
+    SaltHostSerializer, SaltHostSecretsSerializer, EnvironmentSerializer, RoleSerializer
 
 
 class StandardApiMixin(object):
@@ -32,18 +33,44 @@ class StandardApiMixin(object):
         parsers.MultiPartParser
     ]
     metadata_class = metadata.SimpleMetadata
-    pagination_class = None
+    pagination_class = LimitOffsetPagination
+
+
+class ClusterViewSet(StandardApiMixin, viewsets.ModelViewSet):
+    queryset = Cluster.objects.all()
+    serializer_class = ClusterSerializer
+
+
+class EnvironmentViewSet(StandardApiMixin, viewsets.ModelViewSet):
+    queryset = Environment.objects.all()
+    serializer_class = EnvironmentSerializer
+
+
+class HostViewSet(StandardApiMixin, viewsets.ModelViewSet):
+    queryset = Host.objects.all()
+    serializer_class = HostSerializer
+    lookup_field = 'hostname'
+    lookup_value_regex = r'[\w\.-]+\.\w+'
+
+
+class RoleViewSet(StandardApiMixin, viewsets.ModelViewSet):
+    queryset = Role.objects.all()
+    serializer_class = RoleSerializer
+    lookup_field = 'name'
+    lookup_value_regex = r'[\w.-]+'
 
 
 class SaltHostViewSet(StandardApiMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Host.objects.all()
     serializer_class = SaltHostSerializer
     lookup_field = 'hostname'
-    lookup_value_regex = '[\w\.-]+\.\w+'
+    lookup_value_regex = r'[\w\.-]+\.\w+'
+    pagination_class = None
 
 
 class SaltHostSecretsViewSet(StandardApiMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = SaltHostSecretsSerializer
+    pagination_class = None
 
     def get_queryset(self):
         host_hostname = self.kwargs.get('host_hostname', None)
@@ -64,11 +91,6 @@ def salt_discovery_view(request, environment=None):
                 if host.environment.name == environment:
                     discovery[role.name].append(host.hostname)
     return Response(discovery)
-
-
-class ClusterViewSet(viewsets.ModelViewSet):
-    queryset = Cluster.objects.all()
-    serializer_class = ClusterSerializer
 
 
 @api_view(http_method_names=['GET', 'HEAD'])
