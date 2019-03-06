@@ -168,7 +168,7 @@ LOGGING = {
       'django': {
           'handlers':['file'],
           'propagate': True,
-          'level': 'DEBUG',
+          'level': 'WARNING',
       },
       'dewey' : {
           'handlers': ['file'],

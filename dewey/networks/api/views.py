@@ -27,7 +27,7 @@ class AddressAssignmentViewSet(StandardApiMixin, viewsets.ModelViewSet):
 @permission_classes([IsAdminUser])
 def get_unused_address(request, slug):
     network = get_object_or_404(Network, slug=slug)
-    return Response({network.slug: network.get_unused_address()})
+    return Response({'network': network.slug, 'address': network.get_unused_address()})
 
 
 @api_view(['GET', 'HEAD'])

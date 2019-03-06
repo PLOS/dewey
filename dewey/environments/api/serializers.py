@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers as serializers
 
@@ -28,18 +30,31 @@ class OperatingSystemField(serializers.Field):
         return value.name
 
     def to_internal_value(self, data):
-        return OperatingSystem.__members__.get(data)
+        try:
+            os = OperatingSystem.__members__[data]
+        except KeyError:
+            raise serializers.ValidationError('{} is not a valid operating system'.format(data))
+        return os
 
 
 class HostSerializer(serializers.ModelSerializer):
     environment = serializers.SlugRelatedField(slug_field='name', queryset=Environment.objects.all())
     parent_type = serializers.SlugRelatedField(slug_field='model', queryset=ContentType.objects.all())
-    roles = serializers.SlugRelatedField(slug_field='name', queryset=Role.objects.all(), many=True)
+    roles = serializers.SlugRelatedField(slug_field='name', queryset=Role.objects.all(), many=True, required=False)
     operating_system = OperatingSystemField()
 
     class Meta:
         model = Host
         fields = ('id', 'hostname', 'environment', 'roles', 'operating_system', 'parent_type', 'parent_id')
+
+    def validate(self, data):
+        if self.context['request'].method != 'PATCH':
+            hostname, environment = data['hostname'], data['environment']
+            if not re.match(environment.hostname_regex, hostname):
+                raise serializers.ValidationError(
+                    '{} is not a valid hostname for the {} environment'.format(hostname, environment.name)
+                )
+        return data
 
 
 class RoleSerializer(serializers.ModelSerializer):
