@@ -9,40 +9,40 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from rest_framework import renderers, metadata, parsers, viewsets
+from rest_framework import renderers, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.reverse import reverse as apireverse
 
-from dewey.core.utils import dotutils
+from dewey.core.views import StandardApiMixin
 from dewey.environments import OperatingSystem
+from dewey.core.utils import dotutils
 from dewey.environments.models import Cluster, Environment, Host, Role, SafeAccessControl, Secret
 from dewey.networks.models import Network
-from dewey.environments.serializers import ClusterSerializer, \
-    SaltHostSerializer, SaltHostSecretsSerializer
+from dewey.environments.api.serializers import ClusterSerializer, HostSerializer, \
+    SaltHostSerializer, SaltHostSecretsSerializer, EnvironmentSerializer, RoleSerializer
 
 
-class StandardApiMixin(object):
-    renderer_classes = [
-        renderers.JSONRenderer,
-        renderers.BrowsableAPIRenderer
-    ]
-    parser_classes = [
-        parsers.JSONParser,
-        parsers.FormParser,
-        parsers.MultiPartParser
-    ]
-    metadata_class = metadata.SimpleMetadata
-    pagination_class = None
+class ClusterViewSet(StandardApiMixin, viewsets.ModelViewSet):
+    queryset = Cluster.objects.all()
+    serializer_class = ClusterSerializer
 
 
-class SaltHostViewSet(StandardApiMixin, viewsets.ReadOnlyModelViewSet):
+class EnvironmentViewSet(StandardApiMixin, viewsets.ModelViewSet):
+    queryset = Environment.objects.all()
+    serializer_class = EnvironmentSerializer
+    lookup_field = 'name'
+    lookup_value_regex = r'[\w.-]+'
+
+
+class HostViewSet(StandardApiMixin, viewsets.ModelViewSet):
     queryset = Host.objects.all()
-    serializer_class = SaltHostSerializer
+    serializer_class = HostSerializer
     lookup_field = 'hostname'
-    lookup_value_regex = '[\w\.-]+\.\w+'
+    lookup_value_regex = r'[\w\.-]+\.\w+'
 
 
-class SaltHostSecretsViewSet(StandardApiMixin, viewsets.ReadOnlyModelViewSet):
+class HostSecretsViewSet(StandardApiMixin, viewsets.ModelViewSet):
     serializer_class = SaltHostSecretsSerializer
 
     def get_queryset(self):
@@ -50,6 +50,45 @@ class SaltHostSecretsViewSet(StandardApiMixin, viewsets.ReadOnlyModelViewSet):
         if host_hostname:
             queryset = Host.objects.filter(hostname=host_hostname)
             return queryset
+
+
+class RoleViewSet(StandardApiMixin, viewsets.ModelViewSet):
+    queryset = Role.objects.all()
+    serializer_class = RoleSerializer
+    lookup_field = 'name'
+    lookup_value_regex = r'[\w.-]+'
+
+
+class SaltHostViewSet(StandardApiMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = Host.objects.all()
+    serializer_class = SaltHostSerializer
+    lookup_field = 'hostname'
+    lookup_value_regex = r'[\w\.-]+\.\w+'
+    pagination_class = None
+    permission_classes = []
+
+
+class SaltHostSecretsViewSet(StandardApiMixin, viewsets.ReadOnlyModelViewSet):
+    serializer_class = SaltHostSecretsSerializer
+    pagination_class = None
+    permission_classes = []
+
+    def get_queryset(self):
+        host_hostname = self.kwargs.get('host_hostname', None)
+        if host_hostname:
+            queryset = Host.objects.filter(hostname=host_hostname)
+            return queryset
+
+
+@api_view(['GET', 'HEAD'])
+@renderer_classes([renderers.JSONRenderer, renderers.BrowsableAPIRenderer])
+def api_root(request, fmt=None):
+    return Response({
+        'clusters': apireverse('api_v1:environments:environments-clusters-list', request=request, format=fmt),
+        'environments': apireverse('api_v1:environments:environments-environments-list', request=request, format=fmt),
+        'hosts': apireverse('api_v1:environments:environments-hosts-list', request=request, format=fmt),
+        'roles': apireverse('api_v1:environments:environments-roles-list', request=request, format=fmt)
+    })
 
 
 # TODO rewrite as a class-based view and add to api router
@@ -64,11 +103,6 @@ def salt_discovery_view(request, environment=None):
                 if host.environment.name == environment:
                     discovery[role.name].append(host.hostname)
     return Response(discovery)
-
-
-class ClusterViewSet(viewsets.ModelViewSet):
-    queryset = Cluster.objects.all()
-    serializer_class = ClusterSerializer
 
 
 @api_view(http_method_names=['GET', 'HEAD'])

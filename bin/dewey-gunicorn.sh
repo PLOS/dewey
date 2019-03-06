@@ -46,4 +46,4 @@ exec $VIRTUALENV/bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
 --bind=unix:$SOCKFILE \
 --log-syslog \
 --log-level=warning \
---timeout 60
+--timeout 120

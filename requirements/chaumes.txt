@@ -19,3 +19,4 @@ terminaltables==3.1.0
 traitlets==4.3.2
 wcwidth==0.1.7
 Werkzeug==0.12.2
+-e git+git@github.com:PLOS/dewey@9d52c12ba0280269dc803ad3a3bd8693356a8605#egg=dewey

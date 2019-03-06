@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from .models import NetworkDevice, PowerDistributionUnit, Server
-from .serializers import NetworkDeviceDetailSerializer, NetworkDeviceListSerializer,\
+from dewey.hardware.models import NetworkDevice, PowerDistributionUnit, Server
+from dewey.hardware.api.serializers import NetworkDeviceDetailSerializer, NetworkDeviceListSerializer,\
     PowerDistributionUnitDetailSerializer, PowerDistributionUnitListSerializer,\
     ServerDetailSerializer, ServerListSerializer
 
