@@ -5,15 +5,8 @@ import time
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from rest_framework import viewsets
 
 from .models import Network
-from .serializers import NetworkSerializer
-
-
-class NetworkViewSet(viewsets.ModelViewSet):
-    queryset = Network.objects.all()
-    serializer_class = NetworkSerializer
 
 
 @login_required

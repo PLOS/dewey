@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.views.decorators.http import require_POST
 
-from ..models import Environment, Grain, Host, Role, Safe, SafeAccessControl, Secret, Vault
-from ..forms import GrainCreateForm, SecretAddForm, HostSafeAccessForm, RoleSafeAccessForm, SafeUpdateForm, \
+from dewey.environments.models import Environment, Grain, Host, Role, Safe, SafeAccessControl, Secret, Vault
+from dewey.environments.forms import GrainCreateForm, SecretAddForm, HostSafeAccessForm, RoleSafeAccessForm, SafeUpdateForm, \
     SecretUpdateForm, SafeCreateForm
 from dewey.core.utils.decorators import HostAccessRequired, SafeAccessRequired
 

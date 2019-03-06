@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Change, Highstate, StateChange, StateError
+from dewey.salt.models import Change, Highstate, StateChange, StateError
 from dewey.environments.models import Host
 
 
