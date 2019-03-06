@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         now = timezone.now()
-        for highstate in Highstate.objects.all():
+        for highstate in Highstate.objects.only('id', 'received'):
             delta = now - highstate.received
             retention_seconds = self._get_retention_seconds(highstate.statechange_set.all(),
                                                             highstate.stateerror_set.all())
