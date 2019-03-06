@@ -14,7 +14,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import sys
 
-from django.core.exceptions import ImproperlyConfigured
 from dewey.core.utils.settings import get_env, get_log_dir
 
 SETTINGS_MODULE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

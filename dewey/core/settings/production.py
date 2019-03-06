@@ -9,6 +9,7 @@ STATIC_ROOT = os.path.join(HOME, 'static')
 
 SITE_PROTOCOL = 'https'
 SITE_DOMAIN = 'dewey.soma.plos.org'
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # send logs to syslog
 LOGGING['handlers']['syslog'] = {
