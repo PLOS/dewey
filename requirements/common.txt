@@ -16,6 +16,8 @@ django-celery-beat==1.0.1
 django-celery-results==1.0.1
 # remove django-enumfield after squashing migrations
 django-enumfield==1.3b2
+# remove django-enumfields after squashing migrations
+django-enumfields==0.9.0
 django-rest-swagger==2.1.2
 djangorestframework==3.9.1
 dnspython==1.16.0
