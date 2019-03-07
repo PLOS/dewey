@@ -5,6 +5,7 @@ from dewey.salt.api import views as api
 from dewey.environments.api import views as env_api
 
 router = routers.SimpleRouter()
+router.trailing_slash = r'/?'
 router.register(r'salt/changes', api.ChangeViewSet, base_name='salt-changes')
 router.register(r'salt/highstates', api.HighstateViewSet, base_name='salt-highstates')
 router.register(r'salt/hosts', env_api.SaltHostViewSet, base_name='salt-hosts')
