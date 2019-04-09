@@ -4,15 +4,24 @@ Babel==2.4.0
 backports.shutil-get-terminal-size==1.0.0
 billiard==3.5.0.2
 celery==4.0.2
-docopt==0.6.2
-Django==1.11.3
+certifi==2018.11.29
+chardet==3.0.4
+colorclass==2.2.0
+coreapi==2.3.3
+coreschema==0.0.4
+decorator==4.0.11
+Django==1.11.20
+django-appconf==1.0.2
 django-celery-beat==1.0.1
 django-celery-results==1.0.1
 # remove django-enumfield after squashing migrations
 django-enumfield==1.3b2
+# remove django-enumfields after squashing migrations
+django-enumfields==0.9.0
 django-rest-swagger==2.1.2
-django_enumfields==0.9.0
-djangorestframework==3.6.3
+djangorestframework==3.9.1
+dnspython==1.16.0
+docopt==0.6.2
 drf-nested-routers==0.90.0
 flower==0.9.2
 gnureadline==6.3.3

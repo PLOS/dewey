@@ -14,7 +14,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import sys
 
-from django.core.exceptions import ImproperlyConfigured
 from dewey.core.utils.settings import get_env, get_log_dir
 
 SETTINGS_MODULE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -48,6 +47,7 @@ INSTALLED_APPS = (
     'gunicorn',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_swagger',
     'django_celery_results',
     'django_celery_beat',
 )
@@ -64,7 +64,7 @@ MIDDLEWARE_CLASSES = (
     'dewey.core.middleware.login_required.LoginRequiredMiddleware',
 )
 
-ROOT_URLCONF = 'dewey.core.urls'
+ROOT_URLCONF = 'dewey.core.urls.root'
 
 TEMPLATES = [
     {
@@ -167,7 +167,7 @@ LOGGING = {
         'django': {
             'handlers': ['file', 'gunicorn'],
             'propagate': True,
-            'level': 'DEBUG',
+            'level': 'WARNING',
         },
         'dewey': {
             'handlers': ['file', 'gunicorn'],
@@ -239,11 +239,11 @@ SALT_HIGHSTATE_DAYS = 1
 # SALT_HIGHSTATE_CHANGE_DAYS sets the number of days that records of
 # highstate changes will be retained. In addition to the change records,
 # the corresponding highstate records are also retained.
-SALT_HIGHSTATE_CHANGE_DAYS = 365
+SALT_HIGHSTATE_CHANGE_DAYS = 60
 
 # SALT_HIGHSTATE_ERROR_DAYS sets the number of days that records of
 # highstate errors will be retained. In addition to the error records,
 # the corresponding highstate records are also retained.
-SALT_HIGHSTATE_ERROR_DAYS = 365
+SALT_HIGHSTATE_ERROR_DAYS = 60
 
 PAGINATION_RECORDS = 25

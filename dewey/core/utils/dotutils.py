@@ -89,7 +89,12 @@ def merge_dicts(source, destination):
             node = destination.setdefault(key, {})
             merge_dicts(value, node)
         else:
-            destination[key] = value
+            try:
+                destination[key] = value
+            except TypeError as ex:
+                raise RuntimeError('error setting key {} (type {}) on {} (type {}) ({})'.format(
+                    key, type(key), destination, type(destination), ex
+                ))
     return destination
 
 

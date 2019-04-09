@@ -24,7 +24,7 @@ NAME="dewey" # Name of the application
 SOCKFILE="$HOME/run/gunicorn.sock" # we will communicate using this unix socket
 USER=dewey # the user to run as
 GROUP=dewey # the group to run as
-NUM_WORKERS=10 # how many worker processes should Gunicorn spawn
+NUM_WORKERS=12 # how many worker processes should Gunicorn spawn
 DJANGO_WSGI_MODULE=dewey.core.wsgi # WSGI module name
 
 echo "Starting $NAME as `whoami`"
@@ -46,4 +46,4 @@ exec $VIRTUALENV/bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
 --bind=unix:$SOCKFILE \
 --log-syslog \
 --log-level=warning \
---timeout 60
+--timeout 300
